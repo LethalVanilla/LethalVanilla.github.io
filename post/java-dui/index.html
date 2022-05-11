@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Java堆 | Matty</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://lethalvanilla.github.io//favicon.ico?v=1652270258189">
+<link rel="stylesheet" href="https://lethalvanilla.github.io//styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="Java堆是被所有线程共享的一块内存区域，在虚拟机启动时创建。
+这个区域的唯一目的就是存放对象实例。
+Java虚拟机并没有具体实现的固有内存布局，所谓的“经典分代”的仅仅是一部分垃圾收集器的共同特性或者说设计风格而已。
+经典分代理论设计
+
+..." />
+    <meta name="keywords" content="JVM" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://lethalvanilla.github.io/">
+        <img src="https://lethalvanilla.github.io//images/avatar.png?v=1652270258189" class="site-logo">
+        <h1 class="site-title">Matty</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      复习网站
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://lethalvanilla.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Java堆</h2>
+            <div class="post-date">2022-05-11</div>
+            
+            <div class="post-content" v-pre>
+              <p>Java堆是被所有线程共享的一块内存区域，在虚拟机启动时创建。</p>
+<p>这个区域的唯一目的就是存放对象实例。</p>
+<p>Java虚拟机并没有具体实现的固有内存布局，所谓的“经典分代”的仅仅是一部分垃圾收集器的共同特性或者说设计风格而已。</p>
+<p><em>经典分代理论设计</em></p>
+<figure data-type="image" tabindex="1"><img src="https://cdn.jsdelivr.net/gh/LenthDose/PicGo@main/image-20220511194048205.png" alt="image-20220511194048205" loading="lazy"></figure>
+<p>在G1收集器出现之前，虚拟机的垃圾收集器全部都基于“经典分代”来设计，需要新生代、老年代收集器搭配才能工作。</p>
+<h3 id="tlab">TLAB</h3>
+<h4 id="java对象的内存分配过程如何保证线程安全">Java对象的内存分配过程如何保证线程安全？</h4>
+<p>为了解决并发过程中，线程可能会把对象的引用指向同一个内存区域的情况。</p>
+<p>HotSpot虚拟机采用了：每个线程在Java堆中预先分配一小块内存，然后在给对象分配内存的时候，直接在自己的这块“私有”的内存上进行分配，只有当这块“私有”内存用完， 再分配新的“私有”内存。</p>
+<p>这部分Buffer的从堆中划分出来的，但是本地线程独享的。</p>
+<hr>
+<p>TLAB的线程独享是针对于分配动作，至于读取、垃圾回收等工作是线程共享的，而且在使用上也没有什么区别。</p>
+<p>所以有了TLAB技术，堆内存并不是完完全全的线程共享。</p>
+<p>将Java堆细分的目的只是为了更好地回收内存，或者更快地分配内存。</p>
+<p>Java堆可以处于物理上不连续的内存空间中，但在逻辑上它应该被视为连续的，但是对于大对象，多数虚拟机实现处于实现简单、存储高效的考虑，很可能会要求连续的内存空间。</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://lethalvanilla.github.io/tag/8WO9Oq1hY/" class="tag">
+                    JVM
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://lethalvanilla.github.io/post/java-nei-cun-qu-yu-shang/">
+                  <h3 class="post-title">
+                    Java内存区域(上)
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>
